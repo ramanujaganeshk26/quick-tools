@@ -5,8 +5,9 @@ A collection of handy developer scripts and utility tools designed to streamline
 ## Features
 
 - **Developer Utilities**: Quick automation and helper scripts for common software tasks.
+- **Robust Error Handling**: Strict shell safety flags (`set -euo pipefail`), input validation, and clear diagnostic outputs.
 - **Lightweight & Fast**: Minimal setup required to start using tools immediately.
-- **Cross-Platform**: Designed for use across Unix-like and Windows environments.
+- **Cross-Platform**: Designed for use across Unix-like and Windows (Git Bash/WSL) environments.
 
 ## Installation
 
@@ -20,26 +21,44 @@ cd quick-tools
 Ensure you have execution permissions for executable scripts:
 
 ```bash
-chmod +x scripts/*
+chmod +x scripts/*.sh
 ```
 
 ## Usage & Examples
 
-Run helper tools directly from the command line or source them in your shell environment.
+### Environment Prerequisites Checker (`env_checker.sh`)
 
-### Example: Executing a script
-
-```bash
-./scripts/example_tool.sh --help
-```
-
-### Example: Adding to PATH
-
-To make tools accessible globally, add the repository scripts directory to your `PATH`:
+Verify required CLI tools, environment variables, and file paths before running build scripts or pipelines:
 
 ```bash
-export PATH="$PATH:/path/to/quick-tools/scripts"
+./scripts/env_checker.sh \
+  --cmd "git, docker, jq" \
+  --var "HOME, PATH" \
+  --file "README.md"
 ```
+
+### Error Handling Utilities (`utils.sh`)
+
+Include `utils.sh` in custom scripts to benefit from standard logging functions and command/file assertions:
+
+```bash
+source "./scripts/utils.sh"
+
+check_cmd "jq"
+require_file "config.json"
+log_info "All checks passed!"
+```
+
+### Exit Codes
+
+Repository tools adhere to standardized exit status codes:
+
+| Exit Code | Description |
+| :--- | :--- |
+| `0` | Success |
+| `1` | General runtime error or check failure |
+| `2` | Command line argument error / missing required argument |
+| `127` | Missing required CLI dependency |
 
 ## Contributing
 
